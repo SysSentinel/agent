@@ -32,6 +32,7 @@ export interface NetworkStats {
   bytesRecvSec: number;
   bytesSentSec: number;
   interfaceName: string;
+  latencyMs: number;
 }
 
 export interface ContainerStats {
@@ -53,12 +54,20 @@ export interface ContainerStats {
   };
 }
 
+export interface ProcessStats {
+  total: number;
+  running: number;
+  blocked: number;
+  sleeping: number;
+}
+
 export interface TelemetryPayload {
   os: OsStats;
   cpu: CpuStats;
   memory: MemoryStats;
   disk: DiskStats;
   network: NetworkStats;
+  processes: ProcessStats;
   docker: ContainerStats[]; // Array of containers
   uptimeSeconds: number;
   timestamp: string;

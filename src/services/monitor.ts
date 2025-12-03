@@ -9,15 +9,19 @@ export class MonitorService {
   public async collectStats(): Promise<TelemetryPayload | null> {
     try {
       // 1. Parallelize data fetching (excluding docker for safety first)
-      const [osInfo, cpu, currentLoad, mem, fsSize, networkStats, time] = await Promise.all([
-        si.osInfo(),
-        si.cpu(),
-        si.currentLoad(),
-        si.mem(),
-        si.fsSize(),
-        si.networkStats(),
-        si.time(),
-      ]);
+      const [osInfo, cpu, currentLoad, mem, fsSize, networkStats, time,
+        processes,
+        latency] = await Promise.all([
+          si.osInfo(),
+          si.cpu(),
+          si.currentLoad(),
+          si.mem(),
+          si.fsSize(),
+          si.networkStats(),
+          si.time(),
+          si.processes(),
+          si.inetLatency(),
+        ]);
 
       // 2. Fetch Docker Stats (Safely)
       let dockerStats: ContainerStats[] = [];
@@ -88,8 +92,15 @@ export class MonitorService {
           bytesRecvSec: netRx,
           bytesSentSec: netTx,
           interfaceName: 'aggregate',
+          latencyMs: latency,
         },
-        docker: dockerStats, // Added here
+        processes: {
+          total: processes.all,
+          running: processes.running,
+          blocked: processes.blocked,
+          sleeping: processes.sleeping,
+        },
+        docker: dockerStats,
         uptimeSeconds: time.uptime,
         timestamp: new Date().toISOString(),
       };
