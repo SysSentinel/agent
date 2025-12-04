@@ -46,7 +46,7 @@ export interface ContainerStats {
   memoryPercent: number;
   netIO: {
     rx: number; // bytes received
-    tx: number; // bytes sent
+    wx: number; // bytes sent
   };
   blockIO: {
     read: number; // bytes read from disk

@@ -8,10 +8,9 @@ export class MonitorService {
    */
   public async collectStats(): Promise<TelemetryPayload | null> {
     try {
-      // 1. Parallelize data fetching (excluding docker for safety first)
+      // Parallelize data fetching (excluding docker for safety first)
       const [osInfo, cpu, currentLoad, mem, fsSize, networkStats, time,
-        processes,
-        latency] = await Promise.all([
+        processes, latency] = await Promise.all([
           si.osInfo(),
           si.cpu(),
           si.currentLoad(),
@@ -23,36 +22,41 @@ export class MonitorService {
           si.inetLatency(),
         ]);
 
-      // 2. Fetch Docker Stats (Safely)
+      // Fetch Docker Data (Metadata + Stats)
       let dockerStats: ContainerStats[] = [];
       try {
-        // '*' fetches stats for all running containers
-        const rawDocker = await si.dockerContainerStats('*');
+        // Fetch Metadata (Name, Image, State)
+        const containers = await si.dockerContainers();
+        // Fetch Performance Stats (CPU, Mem, I/O)
+        const stats = await si.dockerContainerStats('*');
 
-        dockerStats = rawDocker.map((c: any) => ({
-          id: c.id,
-          name: c.name,
-          image: c.image,
-          state: c.state,
-          cpuPercent: c.cpu_percent,
-          memoryUsage: c.mem_usage,
-          memoryLimit: c.mem_limit,
-          memoryPercent: c.mem_percent,
-          netIO: {
-            rx: c.net_rx,
-            tx: c.net_tx,
-          },
-          blockIO: {
-            read: c.block_read,
-            write: c.block_write,
+        dockerStats = containers.map((container) => {
+          const stat = stats.find((s) => s.id === container.id)!;
+          return {
+            id: container.id,
+            name: container.name,
+            image: container.image,
+            state: container.state,
+            cpuPercent: stat?.cpuPercent,
+            memoryUsage: stat?.memUsage,
+            memoryLimit: stat?.memLimit,
+            memoryPercent: stat?.memPercent,
+            netIO: {
+              rx: stat?.netIO.rx,
+              wx: stat?.netIO.wx,
+            },
+            blockIO: {
+              read: stat?.blockIO.r,
+              write: stat?.blockIO.w,
+            }
           }
-        }));
+        });
       } catch (dockerError) {
         // This is not critical; user might not have Docker or permissions
         // logger.warn('Docker stats could not be collected (socket likely missing)');
       }
 
-      // 3. Process System Data
+      // Process System Data
 
       // Get primary disk (usually mounted on /)
       const mainDisk = fsSize.length > 0 ? fsSize[0] : { size: 0, used: 0, use: 0, fs: 'N/A' };
