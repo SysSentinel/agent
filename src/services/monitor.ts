@@ -31,23 +31,23 @@ export class MonitorService {
         const stats = await si.dockerContainerStats('*');
 
         dockerStats = containers.map((container) => {
-          const stat = stats.find((s) => s.id === container.id)!;
+          const stat = stats.find((s) => s.id === container.id);
           return {
             id: container.id,
             name: container.name,
             image: container.image,
             state: container.state,
-            cpuPercent: stat?.cpuPercent,
-            memoryUsage: stat?.memUsage,
-            memoryLimit: stat?.memLimit,
-            memoryPercent: stat?.memPercent,
+            cpuPercent: stat?.cpuPercent || 0,
+            memoryUsage: stat?.memUsage || 0,
+            memoryLimit: stat?.memLimit || 0,
+            memoryPercent: stat?.memPercent || 0,
             netIO: {
-              rx: stat?.netIO.rx,
-              wx: stat?.netIO.wx,
+              rx: stat?.netIO.rx || 0,
+              wx: stat?.netIO.wx || 0,
             },
             blockIO: {
-              read: stat?.blockIO.r,
-              write: stat?.blockIO.w,
+              read: stat?.blockIO.r || 0,
+              write: stat?.blockIO.w || 0,
             }
           }
         });
