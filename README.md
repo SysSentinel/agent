@@ -58,16 +58,20 @@ docker run -d \
 ```
 
 ### **Option 4: Coolify Deployment Setup**
+
 1. Docker Image: `ghcr.io/syssentinel/agent`
-2. Custom Docker Options : 
+2. Custom Docker Options :
+
 ```
 --name sys-sentinel --restart unless-stopped --network host --pid host --memory="150m" --cpus="0.1" -v /:/host/root:ro -v /sys:/host/sys:ro -v /proc:/host/proc:ro -v /var/run/docker.sock:/var/run/docker.sock:ro
 ```
+
 3. Add the following environment variables in **Environment Variables**:
+
 ```.env
-VPS_ID="<YOUR_VPS_ID>" 
-API_KEY="<YOUR_API_KEY>" 
-API_ENDPOINT="https://api.sys-sentinel.com/api/ingest/stats" 
+VPS_ID="<YOUR_VPS_ID>"
+API_KEY="<YOUR_API_KEY>"
+API_ENDPOINT="https://api.sys-sentinel.com/api/ingest/stats"
 ```
 
 ## **⚙️ Configuration**
@@ -98,7 +102,7 @@ To contribute to the agent or build it locally:
    Create a `.env` file in the root:
 
    ```.env
-   API_ENDPOINT=http://localhost:3000/api/ingest/stats
+   API_ENDPOINT=https://api.sys-sentinel.com/api/ingest/stats
    VPS_ID=test-vps-id
    API_KEY=test-api-key
    INTERVAL=5

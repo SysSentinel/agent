@@ -3,7 +3,7 @@ dotenv.config();
 
 export const config = {
   api: {
-    endpoint: process.env.API_ENDPOINT || 'http://localhost:3000/api/ingest/stats',
+    endpoint: process.env.API_ENDPOINT || 'https://api.sys-sentinel.com/api/ingest/stats',
     key: process.env.API_KEY,
     timeout: 10000,
   },

@@ -41,8 +41,8 @@ if [ -z "$API_KEY" ]; then
 fi
 
 if [ -z "$API_ENDPOINT" ]; then
-    read -p "Enter API Endpoint (Default: http://localhost:3000/api/ingest/stats): " API_ENDPOINT
-    API_ENDPOINT=${API_ENDPOINT:-http://localhost:3000/api/ingest/stats}
+    read -p "Enter API Endpoint (Default: https://api.sys-sentinel.com/api/ingest/stats): " API_ENDPOINT
+    API_ENDPOINT=${API_ENDPOINT:-https://api.sys-sentinel.com/api/ingest/stats}
 fi
 
 echo -e "\n${BLUE}Configuring Agent...${NC}"
