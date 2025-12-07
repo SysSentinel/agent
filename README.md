@@ -57,7 +57,32 @@ docker run -d \
   ghcr.io/senzops/server-agent:latest
 ```
 
-### **Option 4: Coolify Deployment Setup**
+### **Option 4: Docker Compose Deployment**
+
+**Find the [docker-compose.yml](./docs/docker-compose.yml)**
+
+1. **Download the file**: Save the  above linked file as `docker-compose.yml` on your server.
+2. **Edit Credentials**: Open the file and replace the placeholders with your actual IDs from the dashboard:
+
+```.env
+SERVER_ID="<YOUR_SERVER_ID>"
+API_KEY="<YOUR_API_KEY>"
+API_ENDPOINT="https://api.senzor.dev/api/ingest/stats"
+```
+
+3. **Start the Agent**:
+
+```sh
+docker-compose up -d
+```
+
+4. **View Logs**:
+
+```sh
+docker-compose logs -f
+```
+
+### **Option 5: Coolify Deployment Setup**
 
 1. Docker Image: `ghcr.io/senzops/server-agent`
 2. Custom Docker Options :
